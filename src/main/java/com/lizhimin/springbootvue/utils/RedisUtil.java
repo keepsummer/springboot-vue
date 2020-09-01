@@ -163,7 +163,7 @@ public final class RedisUtil {
      * 递增
      * @param key 键
      * @param delta 要增加几(大于0)
-     * @return
+     * @return long
      */
     public long incr(String key, long delta) {
         if (delta < 0) {
@@ -172,10 +172,22 @@ public final class RedisUtil {
         return redisTemplate.opsForValue().increment(key, delta);
     }
     /**
+     * 递增
+     * @param key 键
+     * @param delta 要增加几(大于0)
+     * @return double
+     */
+    public Double zincrby(String key,Object value, long delta) {
+        if (delta < 0) {
+            throw new RuntimeException("递增因子必须大于0");
+        }
+        return redisTemplate.opsForZSet().incrementScore(key,value,delta);
+    }
+    /**
      * 递减
      * @param key 键
      * @param delta 要减少几(小于0)
-     * @return
+     * @return long
      */
     public long decr(String key, long delta) {
         if (delta < 0) {
@@ -191,6 +203,15 @@ public final class RedisUtil {
      */
     public Object hget(String key, String item) {
         return redisTemplate.opsForHash().get(key, item);
+    }
+    /**
+     * HashGet
+     * @param key 键 不能为null
+     * @param item 项 不能为null
+     * @return 值
+     */
+    public Object zget(String key, String item) {
+        return redisTemplate.opsForZSet().score(key,item);
     }
     /**
      * 获取hashKey对应的所有键值
@@ -250,6 +271,23 @@ public final class RedisUtil {
             return false;
         }
     }
+
+    /**
+     * 向一张hash表中放入数据,如果不存在将创建
+     * @param key 键
+     * @param item 项
+     * @param value 值
+     * @return true 成功 false失败
+     */
+    public boolean zset(String key, String item, Double value) {
+        try {
+            redisTemplate.opsForZSet().add(key,item,value);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     /**
      * 向一张hash表中放入数据,如果不存在将创建
      * @param key 键
@@ -292,7 +330,7 @@ public final class RedisUtil {
      * @param key 键
      * @param item 项
      * @param by 要增加几(大于0)
-     * @return
+     * @return double
      */
     public double hincr(String key, String item, double by) {
         return redisTemplate.opsForHash().increment(key, item, by);
@@ -302,7 +340,7 @@ public final class RedisUtil {
      * @param key 键
      * @param item 项
      * @param by 要减少记(小于0)
-     * @return
+     * @return double
      */
     public double hdecr(String key, String item, double by) {
         return redisTemplate.opsForHash().increment(key, item, -by);
@@ -310,7 +348,7 @@ public final class RedisUtil {
     /**
      * 根据key获取Set中的所有值
      * @param key 键
-     * @return
+     * @return Set<Object>
      */
     public Set<Object> sGet(String key) {
         try {
@@ -369,7 +407,7 @@ public final class RedisUtil {
     /**
      * 获取set缓存的长度
      * @param key 键
-     * @return
+     * @return long
      */
     public long sGetSetSize(String key) {
         try {
@@ -400,7 +438,7 @@ public final class RedisUtil {
      * @param key 键
      * @param start 开始
      * @param end 结束 0 到 -1代表所有值
-     * @return
+     * @return List<Object>
      */
     public List<Object> lGet(String key, long start, long end) {
         try {
@@ -413,7 +451,7 @@ public final class RedisUtil {
     /**
      * 获取list缓存的长度
      * @param key 键
-     * @return
+     * @return long
      */
     public long lGetListSize(String key) {
         try {
@@ -427,7 +465,7 @@ public final class RedisUtil {
      * 通过索引 获取list中的值
      * @param key 键
      * @param index 索引 index>=0时， 0 表头，1 第二个元素，依次类推；index<0时，-1，表尾，-2倒数第二个元素，依次类推
-     * @return
+     * @return Object
      */
     public Object lGetIndex(String key, long index) {
         try {
@@ -441,7 +479,7 @@ public final class RedisUtil {
      * 将list放入缓存
      * @param key 键
      * @param value 值
-     * @return
+     * @return boolean
      */
     public boolean lSet(String key, Object value) {
         try {
@@ -457,7 +495,7 @@ public final class RedisUtil {
      * @param key 键
      * @param value 值
      * @param time 时间(秒)
-     * @return
+     * @return boolean
      */
     public boolean lSet(String key, Object value, long time) {
         try {
@@ -474,7 +512,7 @@ public final class RedisUtil {
      * 将list放入缓存
      * @param key 键
      * @param value 值
-     * @return
+     * @return boolean
      */
     public boolean lSet(String key, List<Object> value) {
         try {
@@ -491,7 +529,7 @@ public final class RedisUtil {
      * @param key 键
      * @param value 值
      * @param time 时间(秒)
-     * @return
+     * @return boolean
      */
     public boolean lSet(String key, List<Object> value, long time) {
         try {
@@ -528,6 +566,22 @@ public final class RedisUtil {
      * @return 移除的个数
      */
     public long lRemove(String key, long count, Object value) {
+        try {
+            Long remove = redisTemplate.opsForList().remove(key, count, value);
+            return remove;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    /**
+     * 移除N个值为value
+     * @param key 键
+     * @param count 移除多少个
+     * @param value 值
+     * @return 移除的个数
+     */
+    public long zscore(String key, long count, Object value) {
         try {
             Long remove = redisTemplate.opsForList().remove(key, count, value);
             return remove;

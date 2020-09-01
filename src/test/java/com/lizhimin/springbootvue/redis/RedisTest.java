@@ -1,5 +1,6 @@
 package com.lizhimin.springbootvue.redis;
 
+import com.lizhimin.springbootvue.Landing.ActiveService;
 import com.lizhimin.springbootvue.entity.Active;
 import com.lizhimin.springbootvue.utils.RedisUtil;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,8 @@ import java.util.List;
 public class RedisTest {
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private ActiveService activeService;
 
     public Object getRedis(){
         redisUtil.set("r","aaaaaa");
@@ -57,6 +60,33 @@ public class RedisTest {
 
 
 
+
+    }
+    @Test
+    public void test3(){
+        redisUtil.zset("time","active：0",1598945519501D);
+        redisUtil.zset("time","active：1",1598945519511D);
+    }
+    @Test
+    public void test4(){
+        redisUtil.zset("score","active：0",0D);
+        redisUtil.zset("score","active：1",0D);
+    }
+    @Test
+    public void test5(){
+        redisUtil.sSet("voted:0","user03");
+        redisUtil.sSet("voted:0","user04");
+        redisUtil.zset("score","active：0",864D);
+        redisUtil.hset("active：0", "votes",2);
+    }
+    @Test
+    public void test6() {
+        activeService.articleVote("0","user01");
+        Object time = redisUtil.zget("time", "active：0");
+        java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
+        nf.setGroupingUsed(false);
+        String format = nf.format(time);
+        System.out.println(format);
 
     }
 
