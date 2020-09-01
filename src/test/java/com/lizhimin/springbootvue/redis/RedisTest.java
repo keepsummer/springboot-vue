@@ -1,9 +1,13 @@
 package com.lizhimin.springbootvue.redis;
 
+import com.lizhimin.springbootvue.entity.Active;
 import com.lizhimin.springbootvue.utils.RedisUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 public class RedisTest {
@@ -17,6 +21,43 @@ public class RedisTest {
     @Test
     public void test(){
         System.out.println(getRedis());
+        System.out.println(System.currentTimeMillis());
+    }
+    @Test
+    public void test1(){
+        List<Active> list = new ArrayList<>();
+        Active active = new Active();
+        active.setId(1L);
+        active.setTitle("肖申克的救赎");
+        active.setLink("https://www.cnblogs.com/minmin123/p/13595734.html");
+        active.setPoster("user01");
+        active.setVotes(0);
+        Active active1 = new Active();
+        active1.setId(1L);
+        active1.setTitle("如何提升工作效率");
+        active1.setLink("https://www.baidu.com");
+        active1.setPoster("user02");
+        active1.setVotes(0);
+        list.add(active);
+        list.add(active1);
+
+        Integer i = 0;
+        for (Active active0:list) {
+
+            redisUtil.hset("active："+i, "title",active0.getTitle());
+            redisUtil.hset("active："+i, "link",active0.getLink());
+            redisUtil.hset("active："+i, "poster",active0.getPoster());
+            redisUtil.hset("active："+i, "time",System.currentTimeMillis());
+            redisUtil.hset("active："+i, "votes",active0.getVotes());
+            i++;
+        }
+
+
+
+
+
+
+
     }
 
 }
