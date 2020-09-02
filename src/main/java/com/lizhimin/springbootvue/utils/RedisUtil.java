@@ -335,6 +335,15 @@ public final class RedisUtil {
         return redisTemplate.opsForHash().hasKey(key, item);
     }
     /**
+     * 判断hash表中是否有该项的值
+     * @param key 键 不能为null
+     * @param item 项 不能为null
+     * @return true 存在 false不存在
+     */
+    public boolean sIsMember(String key, String item) {
+        return redisTemplate.opsForSet().isMember(key,item);
+    }
+    /**
      * hash递增 如果不存在,就会创建一个 并把新增后的值返回
      * @param key 键
      * @param item 项

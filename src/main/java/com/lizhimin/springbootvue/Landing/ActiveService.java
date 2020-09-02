@@ -154,4 +154,25 @@ public class ActiveService {
 
     }
 
+    /**
+     * 添加activeId到分组
+     * @param activeId
+     * @return 是否成功
+     */
+    public Long addGroups(String activeId,String groupName){
+       return redisUtil.sSet("Groups"+":"+groupName,"active:"+activeId);
+    }
+
+    /**
+     * 移除分组中的activeId
+     * @param activeId
+     * @return 是否成功
+     */
+    public Long delGroup(String activeId,String groupName){
+        if(redisUtil.sIsMember("Groups"+":"+groupName,"active:"+activeId) == true){
+           return redisUtil.setRemove("Groups"+":"+groupName,"active:"+activeId);
+        }
+        return 0L;
+    }
+
 }

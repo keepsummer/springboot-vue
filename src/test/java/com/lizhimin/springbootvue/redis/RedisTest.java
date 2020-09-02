@@ -117,5 +117,18 @@ public class RedisTest {
         System.out.println(activesByCreatetime);
 
     }
+    @Test
+    public void test10() {
+       // Long aLong = activeService.addGroups("2020090211202600006","jiaoyu");
+        activeService.addGroups("2020090211184300005","jingji");
+
+
+    }
+    @Test
+    public void test11() {
+        Long aLong = activeService.delGroup("2020090211184300005","jingji1");
+
+    }
+
 
 }
