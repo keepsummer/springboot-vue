@@ -83,7 +83,7 @@ public class RedisTest {
     }
     @Test
     public void test6() {
-        activeService.articleVote("0","user01");
+        activeService.articleVote("2020090211184300005","user:000007");
         Object time = redisUtil.zget("time", "active：0");
         java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
         nf.setGroupingUsed(false);
