@@ -214,6 +214,15 @@ public final class RedisUtil {
         return redisTemplate.opsForZSet().score(key,item);
     }
     /**
+     * HashGet
+     * @param key 键 不能为null
+     * @param  min max
+     * @return 值
+     */
+    public Set<Object> zrangeByScorce(String key, double min, double max) {
+        return redisTemplate.opsForZSet().rangeByScore(key,min,max);
+    }
+    /**
      * 获取hashKey对应的所有键值
      * @param key 键
      * @return 对应的多个键值

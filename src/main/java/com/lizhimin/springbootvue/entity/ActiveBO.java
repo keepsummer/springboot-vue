@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class Active implements Serializable {
+public class ActiveBO implements Serializable {
     private static final long serialVersionUID = -5800782578272943999L;
 
 

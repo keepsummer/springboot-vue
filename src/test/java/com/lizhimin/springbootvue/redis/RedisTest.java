@@ -1,7 +1,7 @@
 package com.lizhimin.springbootvue.redis;
 
 import com.lizhimin.springbootvue.Landing.ActiveService;
-import com.lizhimin.springbootvue.entity.Active;
+import com.lizhimin.springbootvue.entity.ActiveBO;
 import com.lizhimin.springbootvue.utils.RedisUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 public class RedisTest {
@@ -30,30 +31,30 @@ public class RedisTest {
     }
     @Test
     public void test1(){
-        List<Active> list = new ArrayList<>();
-        Active active = new Active();
-        active.setId(1L);
-        active.setTitle("肖申克的救赎");
-        active.setLink("https://www.cnblogs.com/minmin123/p/13595734.html");
-        active.setPoster("user01");
-        active.setVotes(0);
-        Active active1 = new Active();
-        active1.setId(1L);
-        active1.setTitle("如何提升工作效率");
-        active1.setLink("https://www.baidu.com");
-        active1.setPoster("user02");
-        active1.setVotes(0);
-        list.add(active);
-        list.add(active1);
+        List<ActiveBO> list = new ArrayList<>();
+        ActiveBO activeBO = new ActiveBO();
+        activeBO.setId(1L);
+        activeBO.setTitle("肖申克的救赎");
+        activeBO.setLink("https://www.cnblogs.com/minmin123/p/13595734.html");
+        activeBO.setPoster("user01");
+        activeBO.setVotes(0);
+        ActiveBO activeBO1 = new ActiveBO();
+        activeBO1.setId(1L);
+        activeBO1.setTitle("如何提升工作效率");
+        activeBO1.setLink("https://www.baidu.com");
+        activeBO1.setPoster("user02");
+        activeBO1.setVotes(0);
+        list.add(activeBO);
+        list.add(activeBO1);
 
         Integer i = 0;
-        for (Active active0:list) {
+        for (ActiveBO activeBO0 :list) {
 
-            redisUtil.hset("active："+i, "title",active0.getTitle());
-            redisUtil.hset("active："+i, "link",active0.getLink());
-            redisUtil.hset("active："+i, "poster",active0.getPoster());
+            redisUtil.hset("active："+i, "title", activeBO0.getTitle());
+            redisUtil.hset("active："+i, "link", activeBO0.getLink());
+            redisUtil.hset("active："+i, "poster", activeBO0.getPoster());
             redisUtil.hset("active："+i, "time",System.currentTimeMillis());
-            redisUtil.hset("active："+i, "votes",active0.getVotes());
+            redisUtil.hset("active："+i, "votes", activeBO0.getVotes());
             i++;
         }
 
@@ -84,11 +85,11 @@ public class RedisTest {
     @Test
     public void test6() {
         activeService.articleVote("2020090211184300005","user:000007");
-        Object time = redisUtil.zget("time", "active：0");
-        java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
-        nf.setGroupingUsed(false);
-        String format = nf.format(time);
-        System.out.println(format);
+//        Object time = redisUtil.zget("time", "active：0");
+//        java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
+//        nf.setGroupingUsed(false);
+//        String format = nf.format(time);
+//        System.out.println(format);
 
     }
     @Test
@@ -101,12 +102,20 @@ public class RedisTest {
     }
     @Test
     public void test8() {
-       Active active = new Active();
-       active.setTitle("如何把大象放进冰箱");
-       active.setLink("https://www.daxiang.com");
-       active.setPoster("user:000007");
-       active.setVotes(0);
-       activeService.postActive(active);
+       ActiveBO activeBO = new ActiveBO();
+       activeBO.setTitle("如何把大象放进冰箱");
+       activeBO.setLink("https://www.daxiang.com");
+       activeBO.setPoster("user:000007");
+       activeBO.setVotes(0);
+       activeService.postActive(activeBO);
+    }
+    @Test
+    public void test9() {
+        Double max = activeService.turnLongToString(System.currentTimeMillis());
+        List<Map> activesByCreatetime = activeService.getActivesByCreatetime(1599016826069D, max);
+        //List<Map> activesList = activeService.getActivesByScore(0D,876D);
+        System.out.println(activesByCreatetime);
+
     }
 
 }

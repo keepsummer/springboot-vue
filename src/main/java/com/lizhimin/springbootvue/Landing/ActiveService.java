@@ -1,15 +1,13 @@
 
 package com.lizhimin.springbootvue.Landing;
 
-import com.lizhimin.springbootvue.entity.Active;
+import com.lizhimin.springbootvue.entity.ActiveBO;
 import com.lizhimin.springbootvue.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ActiveService {
@@ -62,30 +60,30 @@ public class ActiveService {
 
     /**
      * 发布文章
-     * @param activePO 文章po
+     * @param activeBO 文章po
      * @return boolean
      */
-    public boolean postActive(Active activePO){
+    public boolean postActive(ActiveBO activeBO){
         long l = System.currentTimeMillis();
 
         //发布文章
         //1、生成activeId
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        String activeId = simpleDateFormat.format(new Date())+activePO.getPoster().substring(6);
+        String activeId = simpleDateFormat.format(new Date())+activeBO.getPoster().substring(6);
 
         //2、把activeId 放在 voted（投票用户的集合）中 设置过期时间为1个星期
         String voted ="voted"+ ":" + activeId;
-        redisUtil.sSet(voted,activePO.getPoster());
+        redisUtil.sSet(voted,activeBO.getPoster());
         redisUtil.expire(voted,WEEK_SENDS);
 
         //3、把文章信息放在散列中
         String active = "active"+":" + activeId;
         Map<String,Object> map = new HashMap<>();
-        map.put("title",activePO.getTitle());
-        map.put("link",activePO.getLink());
-        map.put("poster",activePO.getPoster());
+        map.put("title",activeBO.getTitle());
+        map.put("link",activeBO.getLink());
+        map.put("poster",activeBO.getPoster());
         map.put("time",l);
-        map.put("votes",activePO.getVotes());
+        map.put("votes",activeBO.getVotes());
         redisUtil.hmset(active,map);
         //4、发布时间、发布初始分数 设置到有序集合中
         redisUtil.zset("score","active"+":" + activeId,0D);
@@ -99,6 +97,60 @@ public class ActiveService {
         nf.setGroupingUsed(false);
         String format = nf.format(l);
         return Double.parseDouble(format);
+
+    }
+
+    /**
+     * 获取最新文章id集合
+     * @param min 时间start
+     * @param max 时间end
+     * @return 获取最新文章id集合
+     */
+    public List<Map> getActivesByCreatetime(Double min,Double max){
+        //1、从time的有序集合中获取最新创建的前三条数据
+        List<Map> activesList = new ArrayList();
+        List<String> activeIdList = new ArrayList<>();
+        Set<Object> activeIdsList = redisUtil.zrangeByScorce("time", min, max);
+        for (Object object:activeIdsList) {
+            if(object instanceof String){
+                activeIdList.add((String)object);
+            }else{
+                System.out.println("转化失败");
+                return null;
+            }
+        }
+        for (String activeId:activeIdList) {
+            Map<Object, Object> activeInformation = redisUtil.hmget(activeId);
+            activesList.add(activeInformation);
+        }
+        return activesList;
+
+
+    }
+    /**
+     * 根据分数获取点赞最多的
+     * @param min 点赞
+     * @param max 数字
+     * @return 获取最新文章id集合
+     */
+    public List<Map> getActivesByScore(Double min,Double max){
+        //1、从time的有序集合中获取最新创建的前三条数据
+        List<Map> activesList = new ArrayList();
+        List<String> activeIdList = new ArrayList<>();
+        Set<Object> activeList = redisUtil.zrangeByScorce("score", min, max);
+        for (Object object:activeList) {
+            if(object instanceof String){
+                activeIdList.add((String)object);
+            }else{
+                System.out.println("转化失败");
+                return null;
+            }
+        }
+        for (String activeId:activeIdList) {
+            Map<Object, Object> activeInformation = redisUtil.hmget(activeId);
+            activesList.add(activeInformation);
+        }
+        return activesList;
 
     }
 
