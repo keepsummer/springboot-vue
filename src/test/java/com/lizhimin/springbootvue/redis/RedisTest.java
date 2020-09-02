@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -88,6 +90,23 @@ public class RedisTest {
         String format = nf.format(time);
         System.out.println(format);
 
+    }
+    @Test
+    public void test7() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        String format = simpleDateFormat.format(new Date());
+        System.out.println(format);
+
+        System.out.println(new Date().toString());
+    }
+    @Test
+    public void test8() {
+       Active active = new Active();
+       active.setTitle("如何把大象放进冰箱");
+       active.setLink("https://www.daxiang.com");
+       active.setPoster("user:000007");
+       active.setVotes(0);
+       activeService.postActive(active);
     }
 
 }
