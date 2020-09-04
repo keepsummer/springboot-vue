@@ -224,6 +224,24 @@ public final class RedisUtil {
         return redisTemplate.opsForZSet().rangeByScore(key,min,max);
     }
     /**
+     * HashGet
+     * @param key 键 不能为null
+     * @param  min max
+     * @return 值
+     */
+    public long zRemRangeByScorce(String key, double min, double max) {
+        return redisTemplate.opsForZSet().removeRangeByScore(key,min,max);
+    }
+    /**
+     * HashGet
+     * @param key 键 不能为null
+     * @param  min max
+     * @return 值
+     */
+    public long zRemoveRange(String key, Long start, long end) {
+        return redisTemplate.opsForZSet().removeRange(key,start,end);
+    }
+    /**
      * 获取hashKey对应的所有键值
      * @param key 键
      * @return 对应的多个键值
