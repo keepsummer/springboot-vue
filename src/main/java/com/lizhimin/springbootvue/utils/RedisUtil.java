@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -291,6 +292,22 @@ public final class RedisUtil {
     public boolean zset(String key, String item, Double value) {
         try {
             redisTemplate.opsForZSet().add(key,item,value);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    /**
+     *  获取2个变量的交集存放到第3个变量里面。
+     * @param key 键
+     * @param otherKey 项
+     * @param destKey 值
+     * @return true 成功 false失败
+     */
+    public boolean zIntersectAndStore(String key, String otherKey, String destKey) {
+        try {
+            redisTemplate.opsForZSet().intersectAndStore(key,otherKey,destKey);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -84,7 +84,12 @@ public class RedisTest {
     }
     @Test
     public void test6() {
-        activeService.articleVote("2020090211184300005","user:000007");
+        activeService.articleVote("2020090415122300009","user:000014");
+        activeService.articleVote("2020090415122300009","user:000014");
+        activeService.articleVote("2020090415143600011","user:000014");
+        activeService.articleVote("2020090211184300005","user:000014");
+        activeService.articleVote("2020090415155000012","user:000014");
+        activeService.articleVote("2020090415133700010","user:000014");
 //        Object time = redisUtil.zget("time", "active：0");
 //        java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
 //        nf.setGroupingUsed(false);
@@ -103,9 +108,9 @@ public class RedisTest {
     @Test
     public void test8() {
        ActiveBO activeBO = new ActiveBO();
-       activeBO.setTitle("如何把大象放进冰箱");
-       activeBO.setLink("https://www.daxiang.com");
-       activeBO.setPoster("user:000007");
+       activeBO.setTitle("竹纤维纸抽的制作");
+       activeBO.setLink("https://www.zhichou.com");
+       activeBO.setPoster("user:000012");
        activeBO.setVotes(0);
        activeService.postActive(activeBO);
     }
@@ -120,13 +125,22 @@ public class RedisTest {
     @Test
     public void test10() {
        // Long aLong = activeService.addGroups("2020090211202600006","jiaoyu");
-        activeService.addGroups("2020090211184300005","jingji");
+//        activeService.addGroups("2020090211184300005","java");
+//        activeService.addGroups("2020090415090000008","java");
+//        activeService.addGroups("2020090415100600008","java");
+        activeService.addGroups("2020090211202600006","java");
 
 
     }
     @Test
     public void test11() {
         Long aLong = activeService.delGroup("2020090211184300005","jingji1");
+
+    }
+
+    @Test
+    public void test12() {
+        activeService.getGroupsActives("java");
 
     }
 

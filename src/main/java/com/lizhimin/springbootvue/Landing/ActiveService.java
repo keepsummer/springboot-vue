@@ -175,4 +175,22 @@ public class ActiveService {
         return 0L;
     }
 
+    /**
+     * 把分组中的文章按照评分排序
+     * @param group
+     * @return boolean
+     */
+    public boolean getGroupsActives(String group){
+        String key =  "score";
+        String destKey = "score"+":"+group;
+        String otherKey = "Groups"+":"+group;
+        boolean b = redisUtil.hasKey(destKey);
+        if(!b){
+            redisUtil.zIntersectAndStore(key, otherKey, destKey);
+            redisUtil.expire(destKey,60);
+        }
+        return false;
+
+    }
+
 }
