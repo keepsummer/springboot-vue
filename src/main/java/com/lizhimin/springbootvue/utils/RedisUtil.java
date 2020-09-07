@@ -179,9 +179,6 @@ public final class RedisUtil {
      * @return double
      */
     public Double zincrby(String key,Object value, long delta) {
-        if (delta < 0) {
-            throw new RuntimeException("递增因子必须大于0");
-        }
         return redisTemplate.opsForZSet().incrementScore(key,value,delta);
     }
     /**

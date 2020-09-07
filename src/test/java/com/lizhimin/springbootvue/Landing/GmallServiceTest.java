@@ -51,10 +51,13 @@ class GmallServiceTest {
      */
     @Test
     public void test4(){
-        for (int i = 0; i < 30; i++) {
-            String token ="1599211468854"+i;
-            Long itemId = 2020090211202600006L+i;
-            gmallService.updateToken(token,"lisi"+i,String.valueOf(itemId));
+        for (int i = 1; i < 800; i++) {
+            if(i%2!=0){
+                String token ="1599211468854"+i;
+                Long itemId = 2020090211202600006L+i;
+                gmallService.updateToken(token,"lisi"+i,String.valueOf(itemId));
+            }
+
 
         }
 

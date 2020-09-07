@@ -34,6 +34,9 @@ public class GmallService {
        redisUtil.zset("viewed"+":"+token,itemId,Double.valueOf(time));
        //4、移除旧记录，只保留最近浏览的25条记录
        redisUtil.zRemoveRange("viewed"+":"+token,0L,-26L);
+       // 新加的代码，记录了所有商品的浏览数量，并根据浏览次数对商品进行了排序，被浏览最多的商品将会放在最前面
+       //而且具有整个有序集合最少的分数
+       redisUtil.zincrby("viewed"+":",itemId,-1);
 
        return 0L;
     }

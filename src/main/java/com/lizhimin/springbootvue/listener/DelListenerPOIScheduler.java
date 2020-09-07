@@ -1,17 +1,12 @@
 package com.lizhimin.springbootvue.listener;
 
 import com.lizhimin.springbootvue.utils.RedisUtil;
-import org.hibernate.query.criteria.internal.expression.function.AggregationFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import static java.lang.Long.min;
@@ -19,14 +14,14 @@ import static java.lang.Long.min;
 /**
  * 定时删除用户收听过的poi
  * @author wenbronk
- * @time 2020年9月7日
  */
 @Component
 @Configurable
 @EnableScheduling
 public class DelListenerPOIScheduler {
-    private Logger LOGGER = LoggerFactory.getLogger(DelListenerPOIScheduler.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(DelListenerPOIScheduler.class);
     public static final Integer LIMIT = 10;
+
     @Autowired
     RedisUtil redisUtil;
 
@@ -46,9 +41,14 @@ public class DelListenerPOIScheduler {
                         redisUtil.zRemove("recent:",token);
                         //清除用户购物车数据
                         redisUtil.del("cart"+":"+token);
+
+
                         LOGGER.info("Token={}",token);
+
                     }
                 }
+                //把viewed序列中前200名的商品留下，其余删除 ，最受欢迎商品
+                redisUtil.zRemoveRange("viewed" + ":", 0L, -201L);
             }
             LOGGER.info("redis中旧令牌被清除");
         } catch (Exception e) {
