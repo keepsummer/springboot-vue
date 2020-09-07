@@ -19,7 +19,7 @@ import static java.lang.Long.min;
 /**
  * 定时删除用户收听过的poi
  * @author wenbronk
- * @time 2017年3月28日  下午2:01:09  2017
+ * @time 2020年9月7日
  */
 @Component
 @Configurable
@@ -36,15 +36,16 @@ public class DelListenerPOIScheduler {
         try {
 
             Long size = redisUtil.zCard("recent:");
-            List tokenList = new ArrayList();
             if(size>LIMIT){
                 long min = min(size - LIMIT, 5L);
                 Set<Object> tokens = redisUtil.zRange("recent:", 0L, min - 1);
                 for (Object token:tokens) {
                     if(token instanceof String){
-                        redisUtil.del("viewed"+":"+(String) token);
-                        redisUtil.hdel("Login",(String)token);
+                        redisUtil.del("viewed"+":"+token);
+                        redisUtil.hdel("Login",token);
                         redisUtil.zRemove("recent:",token);
+                        //清除用户购物车数据
+                        redisUtil.del("cart"+":"+token);
                         LOGGER.info("Token={}",token);
                     }
                 }
