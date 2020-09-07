@@ -185,6 +185,14 @@ public final class RedisUtil {
         return redisTemplate.opsForZSet().incrementScore(key,value,delta);
     }
     /**
+     * 递增
+     * @param key 键
+     * @return Long
+     */
+    public Long zCard(String key) {
+        return redisTemplate.opsForZSet().zCard(key);
+    }
+    /**
      * 递减
      * @param key 键
      * @param delta 要减少几(小于0)
@@ -217,11 +225,30 @@ public final class RedisUtil {
     /**
      * HashGet
      * @param key 键 不能为null
+     * @param  values 项 不能为null
+     * @return 值
+     */
+    public Object zdel(String key, Object... values) {
+        return redisTemplate.opsForZSet().remove(key, values);
+    }
+    /**
+     * HashGet
+     * @param key 键 不能为null
      * @param  min max
      * @return 值
      */
     public Set<Object> zrangeByScorce(String key, double min, double max) {
         return redisTemplate.opsForZSet().rangeByScore(key,min,max);
+    }
+
+    /**
+     * HashGet
+     * @param key 键 不能为null
+     * @param start ,end
+     * @return 值
+     */
+    public Set<Object> zRange(String key,Long start, long end) {
+        return redisTemplate.opsForZSet().range(key,start,end);
     }
     /**
      * HashGet
@@ -235,11 +262,21 @@ public final class RedisUtil {
     /**
      * HashGet
      * @param key 键 不能为null
-     * @param   max
+     * @param   start
+     * @param   end
      * @return 值
      */
     public long zRemoveRange(String key, Long start, long end) {
         return redisTemplate.opsForZSet().removeRange(key,start,end);
+    }
+    /**
+     * HashGet
+     * @param key 键 不能为null
+     * @param   vaules
+     * @return 值
+     */
+    public long zRemove(String key,Object... vaules) {
+        return redisTemplate.opsForZSet().remove(key,vaules);
     }
     /**
      * 获取hashKey对应的所有键值

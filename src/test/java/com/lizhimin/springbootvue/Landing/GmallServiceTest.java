@@ -1,5 +1,6 @@
 package com.lizhimin.springbootvue.Landing;
 
+import com.lizhimin.springbootvue.listener.DelListenerPOIScheduler;
 import com.lizhimin.springbootvue.utils.RedisUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ class GmallServiceTest {
     RedisUtil redisUtil;
     @Autowired
     GmallService gmallService;
+    @Autowired
+    DelListenerPOIScheduler delListenerPOIScheduler;
 
     /**
      * 设置token值
@@ -49,11 +52,22 @@ class GmallServiceTest {
     @Test
     public void test4(){
         for (int i = 0; i < 30; i++) {
-            String token ="1599211468854";
+            String token ="1599211468854"+i;
             Long itemId = 2020090211202600006L+i;
-            gmallService.updateToken(token,"lisi",String.valueOf(itemId));
+            gmallService.updateToken(token,"lisi"+i,String.valueOf(itemId));
 
         }
 
+    }
+    @Test
+    public void test5(){
+        for (int i = 0; i < 30; i++) {
+           redisUtil.zset("listen"+":"+i,String.valueOf(i),300D*i);
+        }
+
+    }
+    @Test
+    public void test6(){
+        System.out.println(redisUtil.zRange("recent:", 0L, -1L));
     }
 }

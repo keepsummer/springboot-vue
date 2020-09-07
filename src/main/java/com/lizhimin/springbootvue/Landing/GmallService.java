@@ -16,7 +16,7 @@ public class GmallService {
      */
    public String checkToken(String token){
        String userName = "";
-       Object tokenObject = redisUtil.hget("Login"+":"+token,token);
+       Object tokenObject = redisUtil.hget("Login:",token);
        if(tokenObject instanceof String){
            userName = (String)tokenObject;
        }
@@ -27,9 +27,9 @@ public class GmallService {
        Double time = turnLongToString(currentTime);
 
        //1、记录用户的token
-       redisUtil.hset("Login"+":"+token,token,username);
+       redisUtil.hset("Login:",token,username);
        //2、记录用户最后一次登录时间
-       redisUtil.zset("recent"+":"+token,token,Double.valueOf(time));
+       redisUtil.zset("recent:",token,Double.valueOf(time));
        //3、记录用户浏览过的商品
        redisUtil.zset("viewed"+":"+token,itemId,Double.valueOf(time));
        //4、移除旧记录，只保留最近浏览的25条记录
