@@ -33,4 +33,27 @@ class GmallServiceTest {
         System.out.println(username);
 
     }
+
+    /**
+     * 获取token值
+     */
+    @Test
+    public void test3(){
+        String token ="1599211468854";
+        gmallService.updateToken(token,"lisi","2020090211202600006");
+
+    }
+    /**
+     * 获取token值
+     */
+    @Test
+    public void test4(){
+        for (int i = 0; i < 30; i++) {
+            String token ="1599211468854";
+            Long itemId = 2020090211202600006L+i;
+            gmallService.updateToken(token,"lisi",String.valueOf(itemId));
+
+        }
+
+    }
 }

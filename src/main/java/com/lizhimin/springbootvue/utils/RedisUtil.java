@@ -235,7 +235,7 @@ public final class RedisUtil {
     /**
      * HashGet
      * @param key 键 不能为null
-     * @param  min max
+     * @param   max
      * @return 值
      */
     public long zRemoveRange(String key, Long start, long end) {

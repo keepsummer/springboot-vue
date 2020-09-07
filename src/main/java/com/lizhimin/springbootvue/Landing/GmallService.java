@@ -33,6 +33,8 @@ public class GmallService {
        //3、记录用户浏览过的商品
        redisUtil.zset("viewed"+":"+token,itemId,Double.valueOf(time));
        //4、移除旧记录，只保留最近浏览的25条记录
+       redisUtil.zRemoveRange("viewed"+":"+token,0L,-26L);
+
        return 0L;
     }
     public Double turnLongToString(Long l){
