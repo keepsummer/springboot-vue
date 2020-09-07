@@ -70,4 +70,8 @@ class GmallServiceTest {
     public void test6(){
         System.out.println(redisUtil.zRange("recent:", 0L, -1L));
     }
+    @Test
+    public void test7(){
+        System.out.println(gmallService.addCart("1599211468854", "2020090211202600006", 4));
+    }
 }

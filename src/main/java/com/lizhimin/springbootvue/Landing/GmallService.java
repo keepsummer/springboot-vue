@@ -46,6 +46,22 @@ public class GmallService {
 
     }
 
+    /**
+     * 添加到购物车
+     * @param session 用户id
+     * @param itemId 商品id
+     * @param count 数量
+     * @return 是否成功
+     */
+    public boolean addCart(String session,String itemId,Integer count){
+       if(count<=0){
+           return redisUtil.hrem("cart" + ":" + session, itemId)>0;
+       }else{
+           return redisUtil.hset("cart"+":"+session,itemId,count);
+       }
+
+    }
+
 
 
 }

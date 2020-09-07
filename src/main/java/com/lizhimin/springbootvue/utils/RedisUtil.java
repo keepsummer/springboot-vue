@@ -216,6 +216,14 @@ public final class RedisUtil {
     /**
      * HashGet
      * @param key 键 不能为null
+     * @return 值
+     */
+    public Long hrem(String key, Object...hashKeys) {
+        return redisTemplate.opsForHash().delete(key,hashKeys);
+    }
+    /**
+     * HashGet
+     * @param key 键 不能为null
      * @param item 项 不能为null
      * @return 值
      */
