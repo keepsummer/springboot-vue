@@ -28,7 +28,7 @@ Spring:
     timeout: 5000
     password: lizhimin123
 server:
-  port: 8081
+  port: 8082
 
 
 

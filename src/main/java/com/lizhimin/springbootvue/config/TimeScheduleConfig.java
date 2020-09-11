@@ -29,7 +29,7 @@ public class TimeScheduleConfig {
         CronTriggerFactoryBean trigger = new CronTriggerFactoryBean();
         trigger.setJobDetail(detailFactoryBean.getObject());
         try {
-            trigger.setCronExpression("0/10 * * * * ?");// 每10秒执行一次
+            trigger.setCronExpression("0/10 1 * * * ?");// 每10秒执行一次
         } catch (Exception e) {
             e.printStackTrace();
         }
