@@ -18,7 +18,7 @@ Spring:
       # show_sql: true
   redis:
     database: 0
-    host: 127.0.0.1
+    host: 47.104.227.161
     port: 6379
     jedis:
       pool:
@@ -26,7 +26,6 @@ Spring:
         max-idle: 10
         max-wait: 100000
     timeout: 5000
-    password: lizhimin123
 server:
   port: 8082
 
