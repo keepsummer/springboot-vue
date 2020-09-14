@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
+import sun.awt.windows.ThemeReader;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class YouTwitFaceService {
     @Autowired
     RedisTemplate redisTemplate;
 
-    private static final Long TEN_MINUTES = 600L;
+    private static final Long SIX_SECONDS = 6L;
     /** HashSet
      * 添加用户信息
      */
@@ -64,26 +65,33 @@ public class YouTwitFaceService {
         String inventory = "inventory"+":"+userId;
         //获取当前时间
         long l = System.currentTimeMillis();
-        while (System.currentTimeMillis()-l <= TEN_MINUTES){
+        while (System.currentTimeMillis()-l <= SIX_SECONDS){
             //监视用户背包发生变化
             redisTemplate.watch(inventory);
             //检查用户是否仍然持有被销售商品
             boolean b = redisUtil.sIsMember(inventory, itemId);
             if(!b){
-                //如果5秒后不存在了就不监视了
+                //如果不存在了就不监视了
+                System.out.println("键不存在了");
                 redisTemplate.unwatch();
+                return null;
             }
+
             redisTemplate.execute(new SessionCallback() {
                 @Override
                 public Object execute(RedisOperations operations) throws DataAccessException {
+                    operations.multi();
+                    System.out.println("事务开始");
                     operations.opsForZSet().add("market:",itemId+":"+userId,price);
                     operations.opsForSet().remove(inventory, itemId);
+                    System.out.println("itemId: "+itemId);
+                    System.out.println("price: "+price);
+                    operations.exec();
                     return null;
                 }
             });
-            return true;
         }
-        return false;
+        return true;
 
     }
 

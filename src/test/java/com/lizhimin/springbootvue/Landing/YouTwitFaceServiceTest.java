@@ -39,7 +39,14 @@ class YouTwitFaceServiceTest {
     }
     @Test
     public void testaddItemInfo1(){
-       youTwitFaceService.addItemInfoToMarket("itemE","10",21D);
+      /// youTwitFaceService.addItemInfoToMarket("itemE","10",21D);
+        youTwitFaceService.addItemInfoToMarket("itemA","10",12D);
     }
+    @Test
+    public void testaddItemInfo2(){
+        /// youTwitFaceService.addItemInfoToMarket("itemE","10",21D);
+        youTwitFaceService.addItemInfoToMarket("itemA","10",32D);
+    }
+
 
 }

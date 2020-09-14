@@ -3,6 +3,7 @@ package com.lizhimin.springbootvue.redis;
 import com.lizhimin.springbootvue.Landing.ActiveService;
 import com.lizhimin.springbootvue.entity.ActiveBO;
 import com.lizhimin.springbootvue.utils.RedisUtil;
+import io.swagger.models.auth.In;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -144,5 +145,13 @@ public class RedisTest {
 
     }
 
+    @Test
+    public void test13() {
+        Integer a =1;
+        while (a<10){
+          a++;
+          System.out.println("a:"+a);
+       }
+    }
 
 }
