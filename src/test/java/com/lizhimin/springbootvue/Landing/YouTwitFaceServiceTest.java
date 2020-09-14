@@ -19,8 +19,23 @@ class YouTwitFaceServiceTest {
     }
     @Test
     public void testaddInvenrtoryInfo(){
-        youTwitFaceService.addInventory("10","item1001");
-        youTwitFaceService.addInventory("11","item1101");
+        youTwitFaceService.addInventory("10","itemA");
+        youTwitFaceService.addInventory("11","itemB");
+        youTwitFaceService.addInventory("10","itemC");
+        youTwitFaceService.addInventory("11","itemD");
+        youTwitFaceService.addInventory("10","itemE");
+        youTwitFaceService.addInventory("11","itemF");
+        youTwitFaceService.addInventory("10","itemI");
+        youTwitFaceService.addInventory("11","itemG");
+    }
+    @Test
+    public void testaddItemInfo(){
+        youTwitFaceService.addItemInfo("itemA","10",15D);
+        youTwitFaceService.addItemInfo("itemB","11",45D);
+        youTwitFaceService.addItemInfo("itemC","10",16D);
+        youTwitFaceService.addItemInfo("itemD","11",29D);
+
+
     }
 
 }

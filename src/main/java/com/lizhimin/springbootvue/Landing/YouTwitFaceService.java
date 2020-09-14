@@ -34,4 +34,15 @@ public class YouTwitFaceService {
       return redisUtil.sSet("inventory"+":"+userId,itemId);
     }
 
+    /**
+     * 添加商品到市场中去
+     * @param itemId
+     * @param userId
+     * @param price
+     * @return
+     */
+    public Boolean addItemInfo(String itemId,String userId,Double price){
+        return redisUtil.zset("market:",itemId+":"+userId,price);
+    }
+
 }
