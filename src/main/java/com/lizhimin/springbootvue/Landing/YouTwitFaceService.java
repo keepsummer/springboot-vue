@@ -2,6 +2,12 @@ package com.lizhimin.springbootvue.Landing;
 
 import com.lizhimin.springbootvue.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,6 +21,8 @@ import java.util.Map;
 public class YouTwitFaceService {
     @Autowired
     RedisUtil redisUtil;
+    @Autowired
+    RedisTemplate redisTemplate;
 
     /** HashSet
      * 添加用户信息
@@ -42,7 +50,42 @@ public class YouTwitFaceService {
      * @return
      */
     public Boolean addItemInfo(String itemId,String userId,Double price){
+
         return redisUtil.zset("market:",itemId+":"+userId,price);
+    }
+    /**
+     * 添加商品到市场中去 加事务，
+     * @param itemId
+     * @param userId
+     * @param price
+     * @return
+     */
+    public Boolean addItemInfoToMarket(String itemId,String userId,Double price){
+        //1、定义：inventory
+        String inventory = "inventory"+":"+userId;
+        //获取当前时间
+        long l = System.currentTimeMillis();
+        while (System.currentTimeMillis()-l <= 600){
+            //监视用户背包发生变化
+            redisTemplate.watch(inventory);
+            //检查用户是否仍然持有被销售商品
+            boolean b = redisUtil.sIsMember(inventory, itemId);
+            if(b==false){
+                //如果5秒后不存在了就不监视了
+                redisTemplate.unwatch();
+            }
+            redisTemplate.execute(new SessionCallback() {
+                @Override
+                public Object execute(RedisOperations operations) throws DataAccessException {
+                    operations.opsForZSet().add("market:",itemId+":"+userId,price);
+                    operations.opsForSet().remove(inventory, itemId);
+                    return null;
+                }
+            });
+            return true;
+        }
+        return false;
+
     }
 
 }

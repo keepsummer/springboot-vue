@@ -37,5 +37,9 @@ class YouTwitFaceServiceTest {
 
 
     }
+    @Test
+    public void testaddItemInfo1(){
+       youTwitFaceService.addItemInfoToMarket("itemE","10",21D);
+    }
 
 }
