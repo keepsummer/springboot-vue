@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import sun.awt.windows.ThemeReader;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,11 +25,12 @@ public class YouTwitFaceService {
     @Autowired
     RedisTemplate redisTemplate;
 
-    private static final Long SIX_SECONDS = 6L;
+    private static final Long SIX_SECONDS = 6000L;
+    private static final String MARKET = "market:";
     /** HashSet
      * 添加用户信息
      */
-    public Boolean addUserInfo(String userId, String name, BigDecimal funds){
+    public Boolean addUserInfo(String userId, String name, Double funds){
         Map<String,Object> userInfoMap = new HashMap<>(10);
         userInfoMap.put("name",name);
         userInfoMap.put("funds",funds);
@@ -92,6 +95,56 @@ public class YouTwitFaceService {
             });
         }
         return true;
+
+    }
+    public boolean purchaseItem(String buyerId,String sellerId,String itemId,Double price){
+        //使用watch对市场和个人信息进行监视
+        //2、获取买家拥有的钱和商品的售价
+        //3、检查买家的钱是否足够
+        //4、扣减买家的钱，增加卖家的钱，买家的背包增加该商品，市场上减少该商品
+        String buyer = "user"+":"+buyerId;
+        String seller = "user"+":"+sellerId;
+        String item = itemId + ":" + sellerId;
+        String inventory = "inventory"+":"+buyerId;
+        List<String> keyList = new ArrayList<>();
+        keyList.add("market:");
+        keyList.add(buyer);
+
+            long l = System.currentTimeMillis();
+            while (System.currentTimeMillis()-l <= SIX_SECONDS){
+                try {
+                    redisTemplate.watch(keyList);
+                    //获取商品的售价
+                    Double price1 = redisUtil.zscore("market:",item);
+                    Object funds = redisUtil.hget(buyer, "funds");
+                    if(funds instanceof BigDecimal){
+                        BigDecimal funds1= (BigDecimal) funds;
+                        if(funds1.doubleValue()< price && !price.equals(price1)){
+                            redisTemplate.unwatch();
+                            return false;
+                        }
+                        redisTemplate.execute(new SessionCallback() {
+                          @Override
+                          public Object execute(RedisOperations operations) throws DataAccessException {
+                              operations.multi();
+                              //先将买家的钱支付给买家，
+                              operations.opsForHash().increment(buyer,"funds",-price);
+                              operations.opsForHash().increment(seller,"funds",price);
+                              operations.opsForSet().add(inventory,itemId);
+                              operations.opsForZSet().remove("market:",item);
+                              operations.exec();
+                              return true;
+                          }
+                      });
+
+                    }
+                }catch (Exception e){
+                    System.out.println("出现异常");
+                    continue;
+                }
+            }
+
+        return false;
 
     }
 

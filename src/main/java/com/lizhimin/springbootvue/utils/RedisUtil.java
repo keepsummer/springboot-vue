@@ -672,17 +672,15 @@ public final class RedisUtil {
     /**
      * 移除N个值为value
      * @param key 键
-     * @param count 移除多少个
-     * @param value 值
+     * @param o 移除多少个
      * @return 移除的个数
      */
-    public long zscore(String key, long count, Object value) {
+    public Double zscore(String key,Object o) {
         try {
-            Long remove = redisTemplate.opsForList().remove(key, count, value);
-            return remove;
+            return redisTemplate.opsForZSet().score(key,o);
         } catch (Exception e) {
             e.printStackTrace();
-            return 0;
+            return 0D;
         }
     }
 }

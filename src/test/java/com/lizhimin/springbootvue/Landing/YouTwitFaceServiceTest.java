@@ -13,9 +13,8 @@ class YouTwitFaceServiceTest {
     YouTwitFaceService youTwitFaceService;
     @Test
     public void testAddUserInfo(){
-        BigDecimal bigDecimal = new BigDecimal(125D);
-       // youTwitFaceService.addUserInfo("10","Frank",bigDecimal);
-        youTwitFaceService.addUserInfo("11","Bill",bigDecimal);
+       youTwitFaceService.addUserInfo("10","Frank",101D);
+        youTwitFaceService.addUserInfo("11","Bill",126D);
     }
     @Test
     public void testaddInvenrtoryInfo(){
@@ -47,6 +46,10 @@ class YouTwitFaceServiceTest {
         /// youTwitFaceService.addItemInfoToMarket("itemE","10",21D);
         youTwitFaceService.addItemInfoToMarket("itemA","10",32D);
     }
+    @Test
+    public void testpurchaseItem(){
+        boolean b = youTwitFaceService.purchaseItem("11", "10", "itemA", 12D);
 
+    }
 
 }
