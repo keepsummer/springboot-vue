@@ -1,9 +1,6 @@
 package com.lizhimin.springbootvue.entity;
 
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import sun.security.util.Length;
-
 import javax.persistence.*;
 import java.io.Serializable;
 

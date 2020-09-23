@@ -26,7 +26,8 @@ public class MyWebConfigurer implements WebMvcConfigurer {
         registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**").excludePathPatterns(
                 "/login",
                 "/register",
-                "/static/**");
+                "/static/**",
+                "/employees/getEmp/a");
         System.out.println("开始拦截---------------------------------------------------");
         WebMvcConfigurer.super.addInterceptors(registry);
     }

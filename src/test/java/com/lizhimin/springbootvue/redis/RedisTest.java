@@ -85,12 +85,12 @@ public class RedisTest {
     }
     @Test
     public void test6() {
-        activeService.articleVote("2020090415122300009","user:000014");
-        activeService.articleVote("2020090415122300009","user:000014");
-        activeService.articleVote("2020090415143600011","user:000014");
-        activeService.articleVote("2020090211184300005","user:000014");
-        activeService.articleVote("2020090415155000012","user:000014");
-        activeService.articleVote("2020090415133700010","user:000014");
+//        activeService.articleVote("2020090415122300009","user:000014");
+//        activeService.articleVote("2020090415122300009","user:000014");
+//        activeService.articleVote("2020090415143600011","user:000014");
+//        activeService.articleVote("2020090211184300005","user:000014");
+//        activeService.articleVote("2020090415155000012","user:000014");
+//        activeService.articleVote("2020090415133700010","user:000014");
 //        Object time = redisUtil.zget("time", "active：0");
 //        java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
 //        nf.setGroupingUsed(false);
